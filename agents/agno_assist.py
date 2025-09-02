@@ -2,8 +2,8 @@ from textwrap import dedent
 
 from agno.agent import Agent
 from agno.db.postgres import PostgresDb
-from agno.knowledge.embedder.openai import OpenAIEmbedder
 from agno.knowledge import Knowledge
+from agno.knowledge.embedder.openai import OpenAIEmbedder
 from agno.models.openai import OpenAIChat
 from agno.tools.duckduckgo import DuckDuckGoTools
 from agno.vectordb.pgvector import PgVector, SearchType
@@ -16,8 +16,8 @@ def get_agno_assist(
     debug_mode: bool = False,
 ) -> Agent:
     return Agent(
+        id="agno-assist",
         name="Agno Assist",
-        agent_id="agno-assist",
         model=OpenAIChat(id=model_id),
         # Tools available to the agent
         tools=[DuckDuckGoTools()],
@@ -77,12 +77,10 @@ def get_agno_assist(
             - You are interacting with the user_id: {current_user_id}
             - The user's name might be different from the user_id, you may ask for it if needed and add it to your memory if they share it with you.\
         """),
-        # This makes `current_user_id` available in the instructions
-        add_state_in_messages=True,
         # -*- Knowledge -*-
         # Add the knowledge base to the agent
         knowledge=Knowledge(
-            contents_db=PostgresDb(db_url=db_url),
+            contents_db=PostgresDb(id="agno-storage", db_url=db_url),
             vector_db=PgVector(
                 db_url=db_url,
                 table_name="agno_assist_knowledge",
@@ -94,10 +92,10 @@ def get_agno_assist(
         search_knowledge=True,
         # -*- Storage -*-
         # Storage chat history and session state in a Postgres table
-        db=PostgresDb(db_url=db_url),
+        db=PostgresDb(id="agno-storage", db_url=db_url),
         # -*- History -*-
         # Send the last 3 messages from the chat history
-        add_history_to_messages=True,
+        add_history_to_context=True,
         num_history_runs=3,
         # Add a tool to read the chat history if needed
         read_chat_history=True,
@@ -108,7 +106,7 @@ def get_agno_assist(
         # Format responses using markdown
         markdown=True,
         # Add the current date and time to the instructions
-        add_datetime_to_instructions=True,
+        add_datetime_to_context=True,
         # Show debug logs
         debug_mode=debug_mode,
     )

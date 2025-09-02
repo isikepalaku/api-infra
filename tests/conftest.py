@@ -1,12 +1,13 @@
 """
 Pytest configuration and fixtures for integration tests.
 """
-import time
-import requests
-import pytest
-from contextlib import contextmanager
-from . import get_api_url
 
+import time
+
+import pytest
+import requests
+
+from . import get_api_url
 
 
 @pytest.fixture
@@ -17,7 +18,7 @@ def api_client() -> requests.Session:
     # Wait for API to be ready first
     max_retries = 30
     retry_delay = 2
-    
+
     for _ in range(max_retries):
         try:
             response = requests.get(get_api_url("/health"))
@@ -25,13 +26,13 @@ def api_client() -> requests.Session:
                 break
         except requests.exceptions.ConnectionError:
             pass
-        
+
         time.sleep(retry_delay)
     else:
         raise Exception("API did not become ready within expected time")
-    
+
     # Create and return the session
     session = requests.Session()
-    session.headers.update({'Content-Type': 'application/json'})
+    session.headers.update({"Content-Type": "application/json"})
     yield session
     session.close()

@@ -1,9 +1,8 @@
 from textwrap import dedent
-from typing import Optional
 
 from agno.agent import Agent
-from agno.models.openai import OpenAIChat
 from agno.db.postgres import PostgresDb
+from agno.models.openai import OpenAIChat
 from agno.tools.duckduckgo import DuckDuckGoTools
 
 from db.session import db_url
@@ -14,8 +13,8 @@ def get_web_agent(
     debug_mode: bool = False,
 ) -> Agent:
     return Agent(
+        id="web-search-agent",
         name="Web Search Agent",
-        agent_id="web-search-agent",
         model=OpenAIChat(id=model_id),
         # Tools available to the agent
         tools=[DuckDuckGoTools()],
@@ -65,14 +64,12 @@ def get_web_agent(
             - You are interacting with the user_id: {current_user_id}
             - The user's name might be different from the user_id, you may ask for it if needed and add it to your memory if they share it with you.\
         """),
-        # This makes `current_user_id` available in the instructions
-        add_state_in_messages=True,
         # -*- Storage -*-
         # Storage chat history and session state in a Postgres table
-        db=PostgresDb(db_url=db_url),
+        db=PostgresDb(id="agno-storage", db_url=db_url),
         # -*- History -*-
         # Send the last 3 messages from the chat history
-        add_history_to_messages=True,
+        add_history_to_context=True,
         num_history_runs=3,
         # -*- Memory -*-
         # Enable agentic memory where the Agent can personalize responses to the user
@@ -81,7 +78,7 @@ def get_web_agent(
         # Format responses using markdown
         markdown=True,
         # Add the current date and time to the instructions
-        add_datetime_to_instructions=True,
+        add_datetime_to_context=True,
         # Show debug logs
         debug_mode=debug_mode,
     )

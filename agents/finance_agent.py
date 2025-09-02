@@ -1,11 +1,16 @@
+"""
+Prerequisites:
+- Set the environment variable `FINANCIAL_DATASETS_API_KEY` with your Financial Datasets API key.
+  You can obtain the API key by creating an account at https://financialdatasets.ai
+"""
+
 from textwrap import dedent
-from typing import Optional
 
 from agno.agent import Agent
 from agno.db.postgres import PostgresDb
 from agno.models.openai import OpenAIChat
 from agno.tools.duckduckgo import DuckDuckGoTools
-from agno.tools.yfinance import YFinanceTools
+from agno.tools.financial_datasets import FinancialDatasetsTools
 
 from db.session import db_url
 
@@ -15,20 +20,13 @@ def get_finance_agent(
     debug_mode: bool = False,
 ) -> Agent:
     return Agent(
+        id="finance-agent",
         name="Finance Agent",
-        agent_id="finance-agent",
         model=OpenAIChat(id=model_id),
         # Tools available to the agent
         tools=[
             DuckDuckGoTools(),
-            YFinanceTools(
-                stock_price=True,
-                analyst_recommendations=True,
-                stock_fundamentals=True,
-                historical_prices=True,
-                company_info=True,
-                company_news=True,
-            ),
+            FinancialDatasetsTools(),
         ],
         # Description of the agent
         description=dedent("""\
@@ -93,14 +91,12 @@ def get_finance_agent(
             - The user's name might be different from the user_id, you may ask for it if needed and add it to your memory if they share it with you.
             - Always use the available tools to fetch the latest data; do not rely on pre-existing knowledge for financial figures or recommendations.\
         """),
-        # This makes `current_user_id` available in the instructions
-        add_state_in_messages=True,
         # -*- Storage -*-
         # Storage chat history and session state in a Postgres table
-        db=PostgresDb(db_url=db_url),
+        db=PostgresDb(id="agno-storage", db_url=db_url),
         # -*- History -*-
         # Send the last 3 messages from the chat history
-        add_history_to_messages=True,
+        add_history_to_context=True,
         num_history_runs=3,
         # Add a tool to read the chat history if needed
         read_chat_history=True,
@@ -111,7 +107,7 @@ def get_finance_agent(
         # Format responses using markdown
         markdown=True,
         # Add the current date and time to the instructions
-        add_datetime_to_instructions=True,
+        add_datetime_to_context=True,
         # Show debug logs
         debug_mode=debug_mode,
     )

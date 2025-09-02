@@ -7,19 +7,14 @@ authors = [{ name = "Agno", email = "hello@agno.com" }]
 
 dependencies = [
   "agno @ git+https://github.com/agno-agi/agno.git@v2.0#subdirectory=libs/agno",
-  "aiofiles",  # TODO: Remove this dependency
-  "python-docx",  # TODO: Remove this dependency
-  "firecrawl",  # TODO: Remove this dependency
-  "unstructured",  # TODO: Remove this dependency
-  "markdown",  # TODO: Remove this dependency
-  "youtube_transcript_api",  # TODO: Remove this dependency
-  "duckduckgo-search",
+  "agno-infra @ git+https://github.com/agno-agi/agno.git@v2.0#subdirectory=libs/agno_infra",
+  "ddgs",
   "fastapi[standard]",
   "openai",
   "pgvector",
   "psycopg[binary]",
+  "requests",
   "sqlalchemy",
-  "yfinance",
 ]
 
 [project.optional-dependencies]
@@ -46,7 +41,7 @@ plugins = ["pydantic.mypy"]
 exclude = [".venv*"]
 
 [[tool.mypy.overrides]]
-module = ["pgvector.*", "setuptools.*", "nest_asyncio.*", "agno.*"]
+module = ["pgvector.*", "setuptools.*", "nest_asyncio.*", "agno.*", "requests.*"]
 ignore_missing_imports = true
 
 [tool.uv.pip]

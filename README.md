@@ -11,7 +11,9 @@ For more information, checkout [Agno](https://agno.link/gh) and give it a ⭐️
 
 Follow these steps to get your Agent OS up and running:
 
-> Prerequisites: [docker desktop](https://www.docker.com/products/docker-desktop) should be installed and running.
+> [Get Docker Desktop](https://www.docker.com/products/docker-desktop) should be installed and running.
+> [Get OpenAI API key](https://platform.openai.com/api-keys)
+> [Get Financial Datasets API key](https://financialdatasets.ai)
 
 ### Clone the repo
 
@@ -26,16 +28,17 @@ We use GPT 4.1 as the default model, please export the `OPENAI_API_KEY` environm
 
 ```sh
 export OPENAI_API_KEY="YOUR_API_KEY_HERE"
+export FINANCIAL_DATASETS_API_KEY="YOUR_API_KEY_HERE"
 ```
 
 > **Note**: You can use any model provider, just update the agents in the `/agents` folder.
 
 ### Start the application
 
-Run the application using docker compose:
+Run the application using docker compose (Remove the `--build` flag if you already have the image built):
 
 ```sh
-docker compose up -d
+docker compose up -d --build 
 ```
 
 This command starts:
@@ -64,7 +67,7 @@ docker compose down
 The `/agents` folder contains pre-built agents that you can use as a starting point.
 - Web Search Agent: A simple agent that can search the web.
 - Agno Assist: An Agent that can help answer questions about Agno.
-- Finance Agent: An agent that uses the YFinance API to get stock prices and financial data.
+- Finance Agent: An agent that uses the Financial Datasets API to get stock prices and financial data.
 
 ## Development Setup
 
