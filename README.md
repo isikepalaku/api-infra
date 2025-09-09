@@ -34,7 +34,11 @@ export OPENAI_API_KEY="YOUR_API_KEY_HERE"
 
 ### Start the application
 
-Run the application using docker compose (Remove the `--build` flag if you already have the image built):
+```sh
+ag infra up
+```
+
+Or run the application using docker compose (Remove the `--build` flag if you already have the image built):
 
 ```sh
 docker compose up -d --build
@@ -58,6 +62,12 @@ Once started, you can:
 ### Stop the application
 
 When you're done, stop the application using:
+
+```sh
+ag infra down
+```
+
+Or:
 
 ```sh
 docker compose down
