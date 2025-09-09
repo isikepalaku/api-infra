@@ -26,7 +26,6 @@ services:
       - .:/app
     environment:
       OPENAI_API_KEY: ${OPENAI_API_KEY}
-      FINANCIAL_DATASETS_API_KEY: ${FINANCIAL_DATASETS_API_KEY}
       DB_HOST: pgvector
       DB_PORT: 5432
       DB_USER: ${DB_USER:-ai}
