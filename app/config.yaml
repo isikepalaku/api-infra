@@ -3,9 +3,7 @@ chat:
     web-search-agent:
       - "What can you do?"
       - "What is currently happening in France?"
-    finance-agent:
       - "What is the latest news on the stock market?"
-      - "Give me a report on NVDA vs TSLA."
     agno-assist:
       - "What can you do?"
       - "What is the latest news on Agno?"
