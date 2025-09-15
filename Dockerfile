@@ -50,7 +50,7 @@ RUN mkdir -p /tmp/uv-cache /var/log/app \
 USER ${USER}
 
 # Expose port
-EXPOSE 8000
+EXPOSE 8086
 
 # Use exec form for better signal handling
 ENTRYPOINT ["/app/scripts/entrypoint.sh"]
